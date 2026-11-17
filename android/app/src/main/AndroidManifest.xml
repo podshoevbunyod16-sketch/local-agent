@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ai.turbollm.app"
+    android:versionCode="1"
+    android:versionName="0.1.0">
+
+    <!-- Local inference needs no network at all. The permission is only needed
+         for the optional "download a GGUF model" screen. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Keep the model in RAM while the screen is off: no, we use mmap. -->
+
+    <uses-feature
+        android:name="android.hardware.ram.low"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.ram.medium"
+        android:required="false" />
+
+    <!-- arm64-v8a covers every phone since ~2016; armeabi-v7a is kept for old
+         devices, x86_64 for emulators on GitHub Actions / desktop. -->
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:name=".TurboApp"
+        android:allowBackup="false"
+        android:extractNativeLibs="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="false"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TurboLLM"
+        android:usesCleartextTraffic="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|uiMode|smallestScreenSize|screenLayout|density"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Let the user open a .gguf from a file manager / browser download. -->
+            <intent-filter android:label="@string/open_gguf">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="*/*" />
+                <data android:scheme="content" />
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.gguf" />
+            </intent-filter>
+        </activity>
+
+        <!-- Model loading + generation run in a foreground service so Android
+             does not freeze the process when the screen turns off. -->
+        <service
+            android:name=".InferenceService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+    </application>
+</manifest>

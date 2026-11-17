@@ -1,0 +1,45 @@
+[package]
+name = "turbollm-core"
+version = "0.2.0"
+edition = "2021"
+rust-version = "1.82"
+description = "Rust inference core (llama.cpp/GGML) with JNI bridge for the TurboLLM Android app"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[lib]
+name = "turbollm_core"
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+llama-cpp-2 = { version = "0.1.161", default-features = false, features = [
+    "android-shared-stdcxx",
+    "sampler",
+] }
+llama-cpp-sys-2 = { version = "0.1.161", default-features = false, features = ["shared-stdcxx"] }
+encoding_rs = "0.8"
+parking_lot = "0.12"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"], optional = true }
+
+[features]
+default = ["jni"]
+# JNI bridge is only needed on Android. The benchmark binary runs without it.
+jni = ["dep:jni", "dep:tracing-subscriber"]
+
+[dependencies.jni]
+version = "0.21"
+optional = true
+
+[[bin]]
+name = "turbollm-bench"
+path = "src/bin/bench.rs"
+required-features = []
+
+[[bin]]
+name = "agent-smoke"
+path = "src/bin/agent_smoke.rs"
+required-features = []

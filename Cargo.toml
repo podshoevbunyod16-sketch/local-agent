@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = ["crates/turbollm-core"]
+
+# Release profile matters a lot for llama.cpp: fat LTO + one codegen unit gives
+# roughly 10-20% more tokens/second on ARM compared to a default release build.
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "debuginfo"

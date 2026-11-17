@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TurboLLM</string>
+    <string name="open_gguf">Открыть GGUF-модель</string>
+    <string name="hint_input">Спросите что-нибудь…</string>
+    <string name="btn_send">Отправить</string>
+    <string name="btn_stop">Стоп</string>
+    <string name="btn_new_chat">Новый чат</string>
+    <string name="menu_model">Модель</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="no_model">Модель не загружена</string>
+    <string name="loading_model">Загрузка модели…</string>
+    <string name="download_hint">Положите GGUF-файл (например Qwen2.5-0.5B-Instruct Q4_K_M, ~400 МБ) в папку Download и выберите его кнопкой «Модель».</string>
+    <string name="notification_channel">Инференс</string>
+    <string name="notification_title">TurboLLM работает</string>
+    <string name="bench_title">Бенчмарк скорости</string>
+    <string name="menu_tools">Инструменты</string>
+    <string name="ragent">ReAct-агент</string>
+</resources>
